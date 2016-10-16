@@ -45,10 +45,40 @@ $(".num-chars-allowed").text(num_chars - count.length);
 //     console.log($(this).val());
 // })
 $("#hashtags").keyup(function() {
-    var hashtags = $(this).val();
-    $(".num-chars-allowed").text(num_chars - count.length - hashtags.length);
-    $('#preview').val(escaped_selected_text + " " + permalink  + " " + hashtags + " via @" + via);
+    set_preview_on_change();
+//     var hashtags = $(this).val();
+//     hashtags = "#" + hashtags.replace(/,/g , " #");
+//     if(hashtags === "#") {
+//         hashtags = "";
+//     }
+//     $(".num-chars-allowed").text(num_chars - count.length - hashtags.length);
+//     $('#preview').val(escaped_selected_text + " " + permalink  + " " + hashtags + " via @" + via);
+//     if($(".num-chars-allowed").text() < 0) {
+//         $(".num-chars-allowed").css("color", "red");
+//     } else {
+//         $(".num-chars-allowed").css("color", "black");
+//     }
 });
+
+function set_preview_on_change() {
+    var via                   = $('#via').val();
+    var permalink             = $('#post-url').val();
+    var hashtags              = $('#hashtags').val().replace(/\s/g, ''); //remove spaces
+    var escaped_selected_text = $("<div/>").html(parent.tinyMCE.activeEditor.selection.getContent()).text();
+
+    hashtags = "#" + hashtags.replace(/,/g , " #"); //replaces commas with hashtags
+    if(hashtags === "#") {
+        hashtags = "";
+    }
+    $(".num-chars-allowed").text(num_chars - count.length - hashtags.length);
+    //We use replace at the end to remove double spaces.
+    $('#preview').val((escaped_selected_text + " " + permalink  + " " + hashtags + " via @" + via).replace(/\s\s+/g, ' '));
+    if($(".num-chars-allowed").text() < 0) {
+        $(".num-chars-allowed").css("color", "red");
+    } else {
+        $(".num-chars-allowed").css("color", "black");
+    }
+}
 
 
 document.getElementById( 'insert-share-link' ).onclick = function(){
