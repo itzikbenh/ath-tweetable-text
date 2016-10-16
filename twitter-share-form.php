@@ -1,3 +1,7 @@
+<div class="twitter-share-div">
+    <label for="text">Text</label><br>
+    <input class="twitter-share-input" id="text" type="text" placeholder="Text">
+</div>
 
 <div class="twitter-share-div">
     <label for="via">Via (Twitter handler without the '@' sign)</label><br>
@@ -5,8 +9,8 @@
 </div>
 
 <div class="twitter-share-div">
-    <label for="post-url">Post URL</label><br>
-    <input class="twitter-share-input" id="post-url" type="text" placeholder="URL">
+    <label for="permalink">Post URL</label><br>
+    <input class="twitter-share-input" id="permalink" type="text" placeholder="URL">
 </div>
 
 <div class="twitter-share-div">
@@ -16,7 +20,7 @@
 
 <div class="preview">
     <label for="preview">Preview</label><br>
-    <textarea id="preview" name="name" rows="8" cols="90" readonly>
+    <textarea id="preview" name="name" rows="6" cols="90" readonly>
 
     </textarea>
 </div>
@@ -30,49 +34,37 @@
 
 //We use the parent, because we are inside of an iframe. This will only work if both documents are in the same origin.
 var permalink = parent.document.getElementById("sample-permalink").getElementsByTagName("A")[0];
-document.getElementById( 'post-url' ).value = permalink;
+$('#permalink').val(permalink);
 
 var via = $('#via').val();
 
 var escaped_selected_text = $("<div/>").html(parent.tinyMCE.activeEditor.selection.getContent()).text();
+$('#text').val(escaped_selected_text);
 $('#preview').val(escaped_selected_text + " " + permalink + " via @" + via);
 
-var count     = escaped_selected_text + permalink + via;
 var num_chars = $(".num-chars-allowed").text();
-$(".num-chars-allowed").text(num_chars - count.length);
+$(".num-chars-allowed").text(num_chars - $('#preview').val().length);
 
-// $(document).on("keypress", "#hashtags", function() {
-//     console.log($(this).val());
-// })
-$("#hashtags").keyup(function() {
+$("#text, #via, #permalink, #hashtags").on("change paste keyup keydown", function() {
     set_preview_on_change();
-//     var hashtags = $(this).val();
-//     hashtags = "#" + hashtags.replace(/,/g , " #");
-//     if(hashtags === "#") {
-//         hashtags = "";
-//     }
-//     $(".num-chars-allowed").text(num_chars - count.length - hashtags.length);
-//     $('#preview').val(escaped_selected_text + " " + permalink  + " " + hashtags + " via @" + via);
-//     if($(".num-chars-allowed").text() < 0) {
-//         $(".num-chars-allowed").css("color", "red");
-//     } else {
-//         $(".num-chars-allowed").css("color", "black");
-//     }
 });
 
 function set_preview_on_change() {
-    var via                   = $('#via').val();
-    var permalink             = $('#post-url').val();
-    var hashtags              = $('#hashtags').val().replace(/\s/g, ''); //remove spaces
-    var escaped_selected_text = $("<div/>").html(parent.tinyMCE.activeEditor.selection.getContent()).text();
+    var via           = $('#via').val();
+    var permalink     = $('#permalink').val();
+    var hashtags      = $('#hashtags').val().replace(/\s/g, ''); //remove spaces
+    var text_to_share = $("#text").val();
 
     hashtags = "#" + hashtags.replace(/,/g , " #"); //replaces commas with hashtags
+    //We manually add this hashtag at the front so we must remove if nothing is left.
     if(hashtags === "#") {
         hashtags = "";
     }
-    $(".num-chars-allowed").text(num_chars - count.length - hashtags.length);
+
     //We use replace at the end to remove double spaces.
-    $('#preview').val((escaped_selected_text + " " + permalink  + " " + hashtags + " via @" + via).replace(/\s\s+/g, ' '));
+    $('#preview').val((text_to_share + " " + permalink  + " " + hashtags + " via @" + via).replace(/\s\s+/g, ' '));
+    $(".num-chars-allowed").text(num_chars - $('#preview').val().length);
+    //Change color to red if exceeded beyond allowed characters.
     if($(".num-chars-allowed").text() < 0) {
         $(".num-chars-allowed").css("color", "red");
     } else {
@@ -82,24 +74,21 @@ function set_preview_on_change() {
 
 
 document.getElementById( 'insert-share-link' ).onclick = function(){
-    var via           = document.getElementById( 'via' ).value;
-    var post_url      = document.getElementById( 'post-url' ).value;
-    var hashtags      = document.getElementById( 'hashtags' ).value.replace(/\s/g, ''); //removes spaces.
-    var selected_text = parent.tinyMCE.activeEditor.selection.getContent();
-    console.log(via);
-    console.log(selected_text);
-
-    return;
+    var via           = $('#via').val();
+    var permalink     = $('#permalink').val();
+    var hashtags      = $('#hashtags').val().replace(/\s/g, ''); //removes spaces.
+    var text_to_share = $("#text").val();
+    //In case text has been changed we need to return the original one.
+    var original_selected_text = parent.tinyMCE.activeEditor.selection.getContent();
 
     var twitter_url = "https://twitter.com/intent/tweet?";
-    twitter_url += "url="+encodeURIComponent(post_url)+"&";
+    twitter_url += "url="+encodeURIComponent(permalink)+"&";
     twitter_url += "via="+via+"&";
-    twitter_url += "text="+encodeURIComponent(selected_text)+"&";
+    twitter_url += "text="+encodeURIComponent(text_to_share)+"&";
     twitter_url += "hashtags="+encodeURIComponent(hashtags)+"&";
 
     var return_text = '';
-    return_text = '<a href="'+twitter_url+'" target="_blank">' + selected_text + '</a>';
-    console.log(return_text.length);
+    return_text = '<a href="'+twitter_url+'" target="_blank">' + original_selected_text + ' <i class="fa fa-twitter" aria-hidden="true" style="color:#15c1e1 !important"></i></a>';
     parent.tinyMCE.activeEditor.execCommand('mceInsertContent', 0, return_text);
     parent.tinyMCE.activeEditor.windowManager.close(window);
 };
