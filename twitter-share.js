@@ -26,7 +26,7 @@
                             title: 'Twitter Share',
                             url: twitter_share_data.form_url,
                             width: 600,
-                            height: 260,
+                            height: 450,
                         });
                     }
                });

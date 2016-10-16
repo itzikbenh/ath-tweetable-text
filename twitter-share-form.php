@@ -14,17 +14,42 @@
     <input class="twitter-share-input" id="hashtags" type="text" placeholder="Hashtags">
 </div>
 
-<div class="placeholder-area">
+<div class="preview">
+    <label for="preview">Preview</label><br>
+    <textarea id="preview" name="name" rows="8" cols="90" readonly>
 
+    </textarea>
 </div>
 
-<button id="preview-share-link">Preview</button>
 <button id="insert-share-link">Insert share link</button>
+<span class="num-chars-allowed">140</span>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 
 <script>
+
 //We use the parent, because we are inside of an iframe. This will only work if both documents are in the same origin.
 var permalink = parent.document.getElementById("sample-permalink").getElementsByTagName("A")[0];
 document.getElementById( 'post-url' ).value = permalink;
+
+var via = $('#via').val();
+
+var escaped_selected_text = $("<div/>").html(parent.tinyMCE.activeEditor.selection.getContent()).text();
+$('#preview').val(escaped_selected_text + " " + permalink + " via @" + via);
+
+var count     = escaped_selected_text + permalink + via;
+var num_chars = $(".num-chars-allowed").text();
+$(".num-chars-allowed").text(num_chars - count.length);
+
+// $(document).on("keypress", "#hashtags", function() {
+//     console.log($(this).val());
+// })
+$("#hashtags").keyup(function() {
+    var hashtags = $(this).val();
+    $(".num-chars-allowed").text(num_chars - count.length - hashtags.length);
+    $('#preview').val(escaped_selected_text + " " + permalink  + " " + hashtags + " via @" + via);
+});
+
 
 document.getElementById( 'insert-share-link' ).onclick = function(){
     var via           = document.getElementById( 'via' ).value;
@@ -49,24 +74,6 @@ document.getElementById( 'insert-share-link' ).onclick = function(){
     parent.tinyMCE.activeEditor.windowManager.close(window);
 };
 
-document.getElementById( 'preview-share-link' ).onclick = function(){
-    var via           = document.getElementById( 'via' ).value;
-    var post_url      = document.getElementById( 'post-url' ).value;
-    var hashtags      = document.getElementById( 'hashtags' ).value.replace(/\s/g, ''); //removes spaces.
-    var selected_text = parent.tinyMCE.activeEditor.selection.getContent();
-
-    var twitter_url = "https://twitter.com/intent/tweet?";
-    twitter_url += "url="+encodeURIComponent(post_url)+"&";
-    twitter_url += "via="+via+"&";
-    twitter_url += "text="+encodeURIComponent(selected_text)+"&";
-    twitter_url += "hashtags="+encodeURIComponent(hashtags)+"&";
-
-    var return_text = '';
-    return_text = '<a href="'+twitter_url+'" target="_blank">' + selected_text + '</a>';
-    console.log(return_text.length);
-    parent.tinyMCE.activeEditor.execCommand('mceInsertContent', 0, return_text);
-    parent.tinyMCE.activeEditor.windowManager.close(window);
-};
 </script>
 
 <style>
@@ -74,7 +81,7 @@ document.getElementById( 'preview-share-link' ).onclick = function(){
         margin-bottom: 15px;
     }
 
-    .twitter-share-input {
+    .twitter-share-input, #preview {
         width: 35em;
         margin: 1px;
         padding: 7px 5px;
@@ -86,6 +93,10 @@ document.getElementById( 'preview-share-link' ).onclick = function(){
         -webkit-transition: 50ms border-color ease-in-out;
         transition: 50ms border-color ease-in-out;
         font-size: 16px;
+    }
+
+    .preview {
+        margin-bottom: 10px;
     }
 
     #preview-share-link, #insert-share-link {
@@ -114,6 +125,11 @@ document.getElementById( 'preview-share-link' ).onclick = function(){
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+    }
+
+    .num-chars-allowed {
+        float: right;
+        margin-right: 20;
     }
 
 </style>
