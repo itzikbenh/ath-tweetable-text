@@ -47,6 +47,12 @@ $('#preview').val(escaped_selected_text + " " + permalink + " via @" + via);
 var num_chars = $(".num-chars-allowed").text();
 $(".num-chars-allowed").text(num_chars - $('#preview').val().length);
 
+if($(".num-chars-allowed").text() < 0) {
+    $(".num-chars-allowed").css("color", "red");
+} else {
+    $(".num-chars-allowed").css("color", "black");
+}
+
 $("#text, #via, #permalink, #hashtags").on("change paste keyup keydown", function() {
     set_preview_on_change();
 });
@@ -75,13 +81,13 @@ function set_preview_on_change() {
 }
 
 
-document.getElementById( 'insert-share-link' ).onclick = function(){
+$('#insert-share-link').on("click", function(){
     var via           = $('#via').val();
     var permalink     = $('#permalink').val();
     var hashtags      = $('#hashtags').val().replace(/\s/g, ''); //removes spaces.
     var text_to_share = $("#text").val();
     //In case text has been changed we need to return the original one.
-    var original_selected_text = parent.tinyMCE.activeEditor.selection.getContent(); 
+    var original_selected_text = parent.tinyMCE.activeEditor.selection.getContent();
 
     var twitter_url = "https://twitter.com/intent/tweet?";
     twitter_url += "url="+encodeURIComponent(permalink)+"&";
@@ -93,7 +99,7 @@ document.getElementById( 'insert-share-link' ).onclick = function(){
     return_text = '<a href="'+twitter_url+'" target="_blank">' + original_selected_text + '</a>';
     parent.tinyMCE.activeEditor.execCommand('mceInsertContent', 0, return_text);
     parent.tinyMCE.activeEditor.windowManager.close(window);
-};
+});
 </script>
 
 <style>
