@@ -47,7 +47,7 @@ function twitter_share_tinymce_button()
 
 function twitter_share_register_tinymce_button( $buttons )
 {
-     array_push( $buttons, "twitter_share_button" );
+     array_push( $buttons, "button_twitter_icon", "twitter_share_button" );
      return $buttons;
 }
 
@@ -56,5 +56,12 @@ function twitter_share_add_tinymce_button( $plugin_array )
      $plugin_array['my_button_script'] = plugins_url( '/twitter-share.js', __FILE__ );
      return $plugin_array;
 }
+
+function twitter_icon( $atts )
+{
+    return "<i class='fa fa-twitter' aria-hidden='true' style='color:#15c1e1 !important'></i>";
+}
+add_shortcode( 'twitter-icon', 'twitter_icon' );
+
 
 

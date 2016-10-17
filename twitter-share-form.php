@@ -39,6 +39,8 @@ $('#permalink').val(permalink);
 var via = $('#via').val();
 
 var escaped_selected_text = $("<div/>").html(parent.tinyMCE.activeEditor.selection.getContent()).text();
+escaped_selected_text     = escaped_selected_text.replace('[twitter-icon]',''); //we don't want to include the short code in the text.
+escaped_selected_text     = $.trim(escaped_selected_text); //removes whitespace from the beginning and end. After we remove the [twitter-icon] it leaves an empty space that needs to be removed
 $('#text').val(escaped_selected_text);
 $('#preview').val(escaped_selected_text + " " + permalink + " via @" + via);
 
@@ -79,7 +81,7 @@ document.getElementById( 'insert-share-link' ).onclick = function(){
     var hashtags      = $('#hashtags').val().replace(/\s/g, ''); //removes spaces.
     var text_to_share = $("#text").val();
     //In case text has been changed we need to return the original one.
-    var original_selected_text = parent.tinyMCE.activeEditor.selection.getContent();
+    var original_selected_text = parent.tinyMCE.activeEditor.selection.getContent(); 
 
     var twitter_url = "https://twitter.com/intent/tweet?";
     twitter_url += "url="+encodeURIComponent(permalink)+"&";
@@ -88,7 +90,7 @@ document.getElementById( 'insert-share-link' ).onclick = function(){
     twitter_url += "hashtags="+encodeURIComponent(hashtags)+"&";
 
     var return_text = '';
-    return_text = '<a href="'+twitter_url+'" target="_blank">' + original_selected_text + ' <i class="fa fa-twitter" aria-hidden="true" style="color:#15c1e1 !important"></i></a>';
+    return_text = '<a href="'+twitter_url+'" target="_blank">' + original_selected_text + '</a>';
     parent.tinyMCE.activeEditor.execCommand('mceInsertContent', 0, return_text);
     parent.tinyMCE.activeEditor.windowManager.close(window);
 };
