@@ -28,6 +28,7 @@ function my_admin_head()
 <script type='text/javascript'>
 var twitter_share_data = {
     'form_url': '<?php echo $form_url; ?>',
+    'twitter_image': '<?php echo plugins_url( "/twitter-icon.png", __FILE__ ); ?>'
 };
 </script>
 <!-- TinyMCE Shortcode Plugin -->

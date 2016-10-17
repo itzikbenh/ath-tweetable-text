@@ -7,7 +7,7 @@
               */
               ed.addButton( 'button_twitter_icon', {
                    title : 'Insert Twitter icon shortcode',
-                   image : '../wp-content/plugins/ath-twitter-share/twitter-icon.png',
+                   image : twitter_share_data.twitter_image,//'../wp-content/plugins/ath-twitter-share/twitter-icon.png',
                    onclick : function() {
                         ed.selection.setContent('[twitter-icon]');
                    }
