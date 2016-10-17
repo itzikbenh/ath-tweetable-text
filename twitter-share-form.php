@@ -92,7 +92,6 @@ document.getElementById( 'insert-share-link' ).onclick = function(){
     parent.tinyMCE.activeEditor.execCommand('mceInsertContent', 0, return_text);
     parent.tinyMCE.activeEditor.windowManager.close(window);
 };
-
 </script>
 
 <style>
@@ -148,7 +147,7 @@ document.getElementById( 'insert-share-link' ).onclick = function(){
 
     .num-chars-allowed {
         float: right;
-        margin-right: 20;
+        margin-right: 5px;
     }
 
 </style>
