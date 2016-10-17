@@ -5,7 +5,7 @@
 
 <div class="twitter-share-div">
     <label for="via">Via (Twitter handler without the '@' sign)</label><br>
-    <input class="twitter-share-input" id="via" type="text" placeholder="Via" value="yourtwitterhandler">
+    <input class="twitter-share-input" id="via" type="text" placeholder="Via" value="coveragerinc">
 </div>
 
 <div class="twitter-share-div">
