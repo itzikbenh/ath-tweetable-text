@@ -9,4 +9,9 @@ There are other plugins that would do it for you. I wanted to make my own and ma
 
 ![alt tag](https://github.com/itzikbenh/ath-tweetable-text/blob/master/twitter-share.gif)
 
+## Addon
+If you would like to add twitter share like the one theguardian.com uses then I have a [gist](https://gist.github.com/itzikbenh/a0211bdaecd3b1c65dfb409fc850a905) for it. Tested on latest browsers only, so run your own tests as well.
+
+![alt tag](https://github.com/itzikbenh/ath-tweetable-text/blob/master/hover-share.gif)
+
 
